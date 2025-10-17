@@ -1,0 +1,58 @@
+version: '3.8'
+
+services:
+  miniflux-exporter:
+    image: miniflux-exporter:latest
+    container_name: miniflux-exporter
+    build:
+      context: ..
+      dockerfile: docker/Dockerfile
+
+    # Environment variables
+    environment:
+      # Required: Miniflux connection
+      - MINIFLUX_URL=${MINIFLUX_URL:-https://miniflux.example.com}
+      - MINIFLUX_API_KEY=${MINIFLUX_API_KEY}
+
+      # Optional: Output configuration
+      - MINIFLUX_OUTPUT_DIR=/output
+
+    # Volumes
+    volumes:
+      # Output directory
+      - ./articles:/output
+
+      # Optional: Configuration file
+      # - ./config.yaml:/app/config.yaml:ro
+
+    # Resource limits (optional)
+    deploy:
+      resources:
+        limits:
+          cpus: '1.0'
+          memory: 512M
+        reservations:
+          cpus: '0.5'
+          memory: 256M
+
+    # Restart policy
+    restart: "no"
+
+    # Command (optional, override default)
+    # command: ["--config", "/app/config.yaml"]
+
+# Named volumes (alternative to bind mounts)
+volumes:
+  articles:
+    driver: local
+
+# Example usage:
+# 1. Create .env file with your credentials:
+#    MINIFLUX_URL=https://your-miniflux.com
+#    MINIFLUX_API_KEY=your_api_key_here
+#
+# 2. Run the exporter:
+#    docker-compose up
+#
+# 3. For scheduled exports, use cron or a scheduler:
+#    0 2 * * * docker-compose -f /path/to/docker-compose.yml up

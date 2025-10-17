@@ -1,0 +1,13 @@
+# Core dependencies for Miniflux Exporter
+
+# Miniflux API client
+miniflux>=0.0.7
+
+# HTML to Markdown converter
+html2text>=2020.1.16
+
+# YAML configuration support
+PyYAML>=5.4.0
+
+# Requests (usually comes with miniflux, but explicit is better)
+requests>=2.25.0

@@ -1,0 +1,36 @@
+# Development dependencies for Miniflux Exporter
+
+# Testing
+pytest>=7.0.0
+pytest-cov>=3.0.0
+pytest-mock>=3.6.0
+coverage>=6.0.0
+
+# Code formatting
+black>=22.0.0
+isort>=5.10.0
+
+# Linting
+flake8>=4.0.0
+pylint>=2.12.0
+mypy>=0.950
+
+# Type stubs
+types-PyYAML>=6.0.0
+types-requests>=2.28.0
+
+# Documentation
+sphinx>=4.0.0
+sphinx-rtd-theme>=1.0.0
+
+# Build and packaging
+build>=0.7.0
+twine>=3.4.0
+wheel>=0.37.0
+
+# Development tools
+pre-commit>=2.15.0
+tox>=3.24.0
+
+# Include base requirements
+-r requirements.txt

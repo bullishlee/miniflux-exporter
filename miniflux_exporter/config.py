@@ -17,23 +17,23 @@ class Config:
 
     # Default configuration values
     DEFAULTS = {
-        'miniflux_url': None,
-        'api_key': None,
-        'output_dir': 'miniflux_articles',
-        'organize_by_feed': True,
-        'organize_by_category': False,
-        'filter_status': None,
-        'filter_starred': None,
-        'filename_format': '{date}_{title}',
-        'batch_size': 100,
-        'include_metadata': True,
-        'save_json_metadata': True,
-        'markdown_options': {
-            'ignore_links': False,
-            'ignore_images': False,
-            'body_width': 0,
-            'skip_internal_links': False,
-        }
+        "miniflux_url": None,
+        "api_key": None,
+        "output_dir": "miniflux_articles",
+        "organize_by_feed": True,
+        "organize_by_category": False,
+        "filter_status": None,
+        "filter_starred": None,
+        "filename_format": "{date}_{title}",
+        "batch_size": 100,
+        "include_metadata": True,
+        "save_json_metadata": True,
+        "markdown_options": {
+            "ignore_links": False,
+            "ignore_images": False,
+            "body_width": 0,
+            "skip_internal_links": False,
+        },
     }
 
     def __init__(self, config_dict: Optional[Dict[str, Any]] = None):
@@ -60,7 +60,7 @@ class Config:
         """
         for key, value in config_dict.items():
             if key in self.config:
-                if key == 'markdown_options' and isinstance(value, dict):
+                if key == "markdown_options" and isinstance(value, dict):
                     self.config[key].update(value)
                 else:
                     self.config[key] = value
@@ -68,9 +68,9 @@ class Config:
     def _load_from_env(self) -> None:
         """Load configuration from environment variables."""
         env_mappings = {
-            'MINIFLUX_URL': 'miniflux_url',
-            'MINIFLUX_API_KEY': 'api_key',
-            'MINIFLUX_OUTPUT_DIR': 'output_dir',
+            "MINIFLUX_URL": "miniflux_url",
+            "MINIFLUX_API_KEY": "api_key",
+            "MINIFLUX_OUTPUT_DIR": "output_dir",
         }
 
         for env_key, config_key in env_mappings.items():
@@ -79,7 +79,7 @@ class Config:
                 self.config[config_key] = value
 
     @classmethod
-    def from_file(cls, filepath: str) -> 'Config':
+    def from_file(cls, filepath: str) -> "Config":
         """
         Load configuration from a file.
 
@@ -98,10 +98,10 @@ class Config:
         if not path.exists():
             raise FileNotFoundError(f"Configuration file not found: {filepath}")
 
-        with open(path, 'r', encoding='utf-8') as f:
-            if path.suffix in ['.yaml', '.yml']:
+        with open(path, "r", encoding="utf-8") as f:
+            if path.suffix in [".yaml", ".yml"]:
                 config_dict = yaml.safe_load(f)
-            elif path.suffix == '.json':
+            elif path.suffix == ".json":
                 config_dict = json.load(f)
             else:
                 raise ValueError(f"Unsupported file format: {path.suffix}")
@@ -117,10 +117,10 @@ class Config:
         """
         path = Path(filepath)
 
-        with open(path, 'w', encoding='utf-8') as f:
-            if path.suffix in ['.yaml', '.yml']:
+        with open(path, "w", encoding="utf-8") as f:
+            if path.suffix in [".yaml", ".yml"]:
                 yaml.dump(self.config, f, default_flow_style=False)
-            elif path.suffix == '.json':
+            elif path.suffix == ".json":
                 json.dump(self.config, f, indent=2)
             else:
                 raise ValueError(f"Unsupported file format: {path.suffix}")
@@ -135,29 +135,29 @@ class Config:
         Raises:
             ValueError: If required configuration is missing or invalid.
         """
-        if not self.config.get('miniflux_url'):
+        if not self.config.get("miniflux_url"):
             raise ValueError("miniflux_url is required")
 
-        if not self.config.get('api_key'):
+        if not self.config.get("api_key"):
             raise ValueError("api_key is required")
 
         # Validate URL format
-        url = self.config['miniflux_url']
-        if not url.startswith(('http://', 'https://')):
+        url = self.config["miniflux_url"]
+        if not url.startswith(("http://", "https://")):
             raise ValueError("miniflux_url must start with http:// or https://")
 
         # Remove trailing /v1/ if present
-        if url.endswith('/v1/') or url.endswith('/v1'):
-            self.config['miniflux_url'] = url.rstrip('/').rsplit('/v1', 1)[0]
+        if url.endswith("/v1/") or url.endswith("/v1"):
+            self.config["miniflux_url"] = url.rstrip("/").rsplit("/v1", 1)[0]
 
         # Validate filter_status
-        if self.config.get('filter_status'):
-            valid_statuses = ['read', 'unread', 'removed']
-            if self.config['filter_status'] not in valid_statuses:
+        if self.config.get("filter_status"):
+            valid_statuses = ["read", "unread", "removed"]
+            if self.config["filter_status"] not in valid_statuses:
                 raise ValueError(f"filter_status must be one of: {valid_statuses}")
 
         # Validate batch_size
-        if self.config['batch_size'] < 1 or self.config['batch_size'] > 1000:
+        if self.config["batch_size"] < 1 or self.config["batch_size"] > 1000:
             raise ValueError("batch_size must be between 1 and 1000")
 
         return True
@@ -191,6 +191,6 @@ class Config:
         """Return string representation of configuration."""
         # Hide sensitive data
         safe_config = self.config.copy()
-        if safe_config.get('api_key'):
-            safe_config['api_key'] = '***HIDDEN***'
+        if safe_config.get("api_key"):
+            safe_config["api_key"] = "***HIDDEN***"
         return f"Config({safe_config})"

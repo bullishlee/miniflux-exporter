@@ -25,8 +25,8 @@ def setup_logging(verbose: bool = False) -> None:
     level = logging.DEBUG if verbose else logging.INFO
     logging.basicConfig(
         level=level,
-        format='%(asctime)s - %(levelname)s - %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
+        format="%(asctime)s - %(levelname)s - %(message)s",
+        datefmt="%Y-%m-%d %H:%M:%S",
     )
 
 
@@ -56,7 +56,7 @@ def test_connection(config: Config) -> int:
     exporter = MinifluxExporter(config)
     result = exporter.test_connection()
 
-    if not result['success']:
+    if not result["success"]:
         print(f"✗ Connection failed: {result.get('error', 'Unknown error')}")
         print()
         print("Troubleshooting:")
@@ -77,7 +77,7 @@ def test_connection(config: Config) -> int:
     print(f"  Categories: {result['categories_count']}")
     print(f"  Total Entries: {result['total_entries']}")
 
-    if result['filtered_entries'] != result['total_entries']:
+    if result["filtered_entries"] != result["total_entries"]:
         print(f"  Filtered Entries: {result['filtered_entries']}")
 
     print()
@@ -103,9 +103,9 @@ def run_export(config: Config, quiet: bool = False) -> int:
         print(f"  Organize by feed: {config['organize_by_feed']}")
         print(f"  Organize by category: {config['organize_by_category']}")
 
-        if config['filter_status']:
+        if config["filter_status"]:
             print(f"  Filter status: {config['filter_status']}")
-        if config['filter_starred'] is not None:
+        if config["filter_starred"] is not None:
             print(f"  Filter starred: {config['filter_starred']}")
 
         print()
@@ -137,10 +137,10 @@ def run_export(config: Config, quiet: bool = False) -> int:
             print("=" * 60)
             print(f"✓ Successfully saved: {results['saved']} articles")
 
-            if results['skipped'] > 0:
+            if results["skipped"] > 0:
                 print(f"⊘ Skipped (already exists): {results['skipped']} articles")
 
-            if results['failed'] > 0:
+            if results["failed"] > 0:
                 print(f"✗ Failed: {results['failed']} articles")
 
             print(f"⏱  Duration: {results['duration']:.1f} seconds")
@@ -235,33 +235,37 @@ def interactive_setup() -> Optional[Config]:
         # Advanced options
         print("[5/5] Advanced Options")
         print("-" * 60)
-        include_metadata = input("Include metadata in files? [Y/n]: ").strip().lower() != 'n'
-        save_json = input("Save metadata JSON file? [Y/n]: ").strip().lower() != 'n'
+        include_metadata = (
+            input("Include metadata in files? [Y/n]: ").strip().lower() != "n"
+        )
+        save_json = input("Save metadata JSON file? [Y/n]: ").strip().lower() != "n"
 
         print()
 
         # Create config
-        config = Config({
-            'miniflux_url': url,
-            'api_key': api_key,
-            'output_dir': output_dir,
-            'organize_by_feed': organize_by_feed,
-            'organize_by_category': organize_by_category,
-            'filter_status': filter_status,
-            'filter_starred': filter_starred,
-            'include_metadata': include_metadata,
-            'save_json_metadata': save_json
-        })
+        config = Config(
+            {
+                "miniflux_url": url,
+                "api_key": api_key,
+                "output_dir": output_dir,
+                "organize_by_feed": organize_by_feed,
+                "organize_by_category": organize_by_category,
+                "filter_status": filter_status,
+                "filter_starred": filter_starred,
+                "include_metadata": include_metadata,
+                "save_json_metadata": save_json,
+            }
+        )
 
         # Test connection
         print("Testing connection...")
         exporter = MinifluxExporter(config)
         result = exporter.test_connection()
 
-        if not result['success']:
+        if not result["success"]:
             print(f"✗ Connection test failed: {result.get('error', 'Unknown error')}")
             retry = input("Continue anyway? [y/N]: ").strip().lower()
-            if retry != 'y':
+            if retry != "y":
                 return None
         else:
             print(f"✓ Connected successfully as {result['user']['username']}")
@@ -271,8 +275,10 @@ def interactive_setup() -> Optional[Config]:
 
         # Offer to save config
         save_config = input("Save configuration to file? [y/N]: ").strip().lower()
-        if save_config == 'y':
-            config_file = input("Config file path [config.yaml]: ").strip() or "config.yaml"
+        if save_config == "y":
+            config_file = (
+                input("Config file path [config.yaml]: ").strip() or "config.yaml"
+            )
             config.to_file(config_file)
             print(f"✓ Configuration saved to {config_file}")
 
@@ -295,7 +301,7 @@ def main() -> int:
         Exit code.
     """
     parser = argparse.ArgumentParser(
-        description='Export Miniflux articles to Markdown format',
+        description="Export Miniflux articles to Markdown format",
         formatter_class=argparse.RawDescriptionHelpFormatter,
         epilog="""
 Examples:
@@ -315,108 +321,74 @@ Examples:
   miniflux-export --config config.yaml --status unread --starred
 
 For more information, visit: https://github.com/bullishlee/miniflux-exporter
-        """
+        """,
     )
 
     parser.add_argument(
-        '--version',
-        action='version',
-        version=f'miniflux-exporter {__version__}'
+        "--version", action="version", version=f"miniflux-exporter {__version__}"
     )
 
     parser.add_argument(
-        '--config', '-c',
-        type=str,
-        help='Configuration file (YAML or JSON)'
+        "--config", "-c", type=str, help="Configuration file (YAML or JSON)"
     )
 
     parser.add_argument(
-        '--setup',
-        action='store_true',
-        help='Run interactive setup wizard'
+        "--setup", action="store_true", help="Run interactive setup wizard"
     )
 
     parser.add_argument(
-        '--test',
-        action='store_true',
-        help='Test connection only (do not export)'
+        "--test", action="store_true", help="Test connection only (do not export)"
     )
 
     # Miniflux connection
-    parser.add_argument(
-        '--url',
-        type=str,
-        help='Miniflux instance URL'
-    )
+    parser.add_argument("--url", type=str, help="Miniflux instance URL")
 
-    parser.add_argument(
-        '--api-key',
-        type=str,
-        help='Miniflux API key'
-    )
+    parser.add_argument("--api-key", type=str, help="Miniflux API key")
 
     # Output options
+    parser.add_argument("--output", "-o", type=str, help="Output directory")
+
     parser.add_argument(
-        '--output', '-o',
-        type=str,
-        help='Output directory'
+        "--organize-by-feed", action="store_true", help="Organize articles by feed"
     )
 
     parser.add_argument(
-        '--organize-by-feed',
-        action='store_true',
-        help='Organize articles by feed'
-    )
-
-    parser.add_argument(
-        '--organize-by-category',
-        action='store_true',
-        help='Organize articles by category'
+        "--organize-by-category",
+        action="store_true",
+        help="Organize articles by category",
     )
 
     # Filters
     parser.add_argument(
-        '--status',
+        "--status",
         type=str,
-        choices=['read', 'unread'],
-        help='Filter by article status'
+        choices=["read", "unread"],
+        help="Filter by article status",
     )
 
     parser.add_argument(
-        '--starred',
-        action='store_true',
-        help='Export only starred articles'
+        "--starred", action="store_true", help="Export only starred articles"
     )
 
     # Other options
     parser.add_argument(
-        '--batch-size',
-        type=int,
-        help='Number of articles to fetch per batch'
+        "--batch-size", type=int, help="Number of articles to fetch per batch"
     )
 
     parser.add_argument(
-        '--no-metadata',
-        action='store_true',
-        help='Do not include metadata in files'
+        "--no-metadata", action="store_true", help="Do not include metadata in files"
     )
 
     parser.add_argument(
-        '--no-json',
-        action='store_true',
-        help='Do not save metadata JSON file'
+        "--no-json", action="store_true", help="Do not save metadata JSON file"
     )
 
     parser.add_argument(
-        '--quiet', '-q',
-        action='store_true',
-        help='Suppress progress output'
+        "--quiet", "-q", action="store_true", help="Suppress progress output"
     )
 
     parser.add_argument(
-        '--verbose', '-v',
-        action='store_true',
-        help='Enable verbose logging'
+        "--verbose", "-v", action="store_true", help="Enable verbose logging"
     )
 
     args = parser.parse_args()
@@ -431,7 +403,7 @@ For more information, visit: https://github.com/bullishlee/miniflux-exporter
             return 1
 
         # Ask if user wants to run export now
-        run_now = input("Run export now? [Y/n]: ").strip().lower() != 'n'
+        run_now = input("Run export now? [Y/n]: ").strip().lower() != "n"
         if not run_now:
             print("Setup complete. Run 'miniflux-export' to start export.")
             return 0
@@ -450,25 +422,25 @@ For more information, visit: https://github.com/bullishlee/miniflux-exporter
         config_dict = {}
 
         if args.url:
-            config_dict['miniflux_url'] = args.url
+            config_dict["miniflux_url"] = args.url
         if args.api_key:
-            config_dict['api_key'] = args.api_key
+            config_dict["api_key"] = args.api_key
         if args.output:
-            config_dict['output_dir'] = args.output
+            config_dict["output_dir"] = args.output
         if args.organize_by_feed:
-            config_dict['organize_by_feed'] = True
+            config_dict["organize_by_feed"] = True
         if args.organize_by_category:
-            config_dict['organize_by_category'] = True
+            config_dict["organize_by_category"] = True
         if args.status:
-            config_dict['filter_status'] = args.status
+            config_dict["filter_status"] = args.status
         if args.starred:
-            config_dict['filter_starred'] = True
+            config_dict["filter_starred"] = True
         if args.batch_size:
-            config_dict['batch_size'] = args.batch_size
+            config_dict["batch_size"] = args.batch_size
         if args.no_metadata:
-            config_dict['include_metadata'] = False
+            config_dict["include_metadata"] = False
         if args.no_json:
-            config_dict['save_json_metadata'] = False
+            config_dict["save_json_metadata"] = False
 
         config = Config(config_dict)
 
@@ -489,5 +461,5 @@ For more information, visit: https://github.com/bullishlee/miniflux-exporter
     return run_export(config, args.quiet)
 
 
-if __name__ == '__main__':
+if __name__ == "__main__":
     sys.exit(main())

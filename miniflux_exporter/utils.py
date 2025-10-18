@@ -21,17 +21,17 @@ def sanitize_filename(filename: str, max_length: int = 200) -> str:
         Sanitized filename.
     """
     # Remove or replace illegal characters
-    filename = re.sub(r'[\\/:*?"<>|]', '_', filename)
+    filename = re.sub(r'[\\/:*?"<>|]', "_", filename)
     # Remove leading/trailing spaces
     filename = filename.strip()
     # Remove consecutive underscores
-    filename = re.sub(r'_+', '_', filename)
+    filename = re.sub(r"_+", "_", filename)
     # Remove leading/trailing underscores and dots
-    filename = filename.strip('_.')
+    filename = filename.strip("_.")
     # Limit length
     if len(filename) > max_length:
         filename = filename[:max_length]
-    return filename or 'untitled'
+    return filename or "untitled"
 
 
 def create_markdown_frontmatter(entry: Dict[str, Any]) -> str:
@@ -44,12 +44,14 @@ def create_markdown_frontmatter(entry: Dict[str, Any]) -> str:
     Returns:
         YAML formatted Front Matter string.
     """
-    feed_title = entry.get('feed', {}).get('title', 'Unknown')
-    category_title = entry.get('feed', {}).get('category', {}).get('title', 'Uncategorized')
+    feed_title = entry.get("feed", {}).get("title", "Unknown")
+    category_title = (
+        entry.get("feed", {}).get("category", {}).get("title", "Uncategorized")
+    )
 
     # Escape quotes
-    title = entry.get('title', '').replace('"', '\\"')
-    author = entry.get('author', '').replace('"', '\\"')
+    title = entry.get("title", "").replace('"', '\\"')
+    author = entry.get("author", "").replace('"', '\\"')
     feed_title = feed_title.replace('"', '\\"')
     category_title = category_title.replace('"', '\\"')
 
@@ -84,33 +86,33 @@ def format_filename(entry: Dict[str, Any], template: str = "{date}_{title}") -> 
         Formatted filename (without extension).
     """
     # Get date
-    published_at = entry.get('published_at', '')
+    published_at = entry.get("published_at", "")
     if published_at:
         date = published_at[:10]  # YYYY-MM-DD
     else:
         from datetime import datetime
-        date = datetime.now().strftime('%Y-%m-%d')
+
+        date = datetime.now().strftime("%Y-%m-%d")
 
     # Get title
-    title = entry.get('title', 'Untitled')
+    title = entry.get("title", "Untitled")
     title = sanitize_filename(title)
 
     # Get ID
-    entry_id = entry.get('id', 0)
+    entry_id = entry.get("id", 0)
 
     # Format filename
-    filename = template.format(
-        date=date,
-        title=title,
-        id=entry_id
-    )
+    filename = template.format(date=date, title=title, id=entry_id)
 
     return sanitize_filename(filename)
 
 
-def get_save_path(entry: Dict[str, Any], base_dir: str,
-                  organize_by_feed: bool = True,
-                  organize_by_category: bool = False) -> Path:
+def get_save_path(
+    entry: Dict[str, Any],
+    base_dir: str,
+    organize_by_feed: bool = True,
+    organize_by_category: bool = False,
+) -> Path:
     """
     Determine save path for entry based on organization settings.
 
@@ -127,21 +129,24 @@ def get_save_path(entry: Dict[str, Any], base_dir: str,
 
     if organize_by_category:
         # Organize by category
-        category_title = entry.get('feed', {}).get('category', {}).get('title', 'Uncategorized')
+        category_title = (
+            entry.get("feed", {}).get("category", {}).get("title", "Uncategorized")
+        )
         category_name = sanitize_filename(category_title)
         path = path / category_name
 
     if organize_by_feed:
         # Organize by feed
-        feed_title = entry.get('feed', {}).get('title', 'Unknown')
+        feed_title = entry.get("feed", {}).get("title", "Unknown")
         feed_name = sanitize_filename(feed_title)
         path = path / feed_name
 
     return path
 
 
-def print_progress_bar(current: int, total: int, prefix: str = '',
-                       suffix: str = '', length: int = 40) -> None:
+def print_progress_bar(
+    current: int, total: int, prefix: str = "", suffix: str = "", length: int = 40
+) -> None:
     """
     Print a progress bar to console.
 
@@ -158,10 +163,13 @@ def print_progress_bar(current: int, total: int, prefix: str = '',
         percent = current / total * 100
 
     filled_length = int(length * current // total) if total > 0 else 0
-    bar = '█' * filled_length + '░' * (length - filled_length)
+    bar = "█" * filled_length + "░" * (length - filled_length)
 
-    print(f'\r{prefix} |{bar}| {current}/{total} ({percent:.1f}%) {suffix}',
-          end='', flush=True)
+    print(
+        f"\r{prefix} |{bar}| {current}/{total} ({percent:.1f}%) {suffix}",
+        end="",
+        flush=True,
+    )
 
     if current == total:
         print()  # New line on completion
@@ -177,7 +185,7 @@ def format_bytes(bytes_size: int) -> str:
     Returns:
         Formatted string (e.g., "1.5 MB").
     """
-    for unit in ['B', 'KB', 'MB', 'GB', 'TB']:
+    for unit in ["B", "KB", "MB", "GB", "TB"]:
         if bytes_size < 1024.0:
             return f"{bytes_size:.1f} {unit}"
         bytes_size /= 1024.0
@@ -195,16 +203,18 @@ def validate_url(url: str) -> bool:
         True if URL is valid, False otherwise.
     """
     url_pattern = re.compile(
-        r'^https?://'  # http:// or https://
-        r'(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|'  # domain...
-        r'localhost|'  # localhost...
-        r'\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})'  # ...or ip
-        r'(?::\d+)?'  # optional port
-        r'(?:/?|[/?]\S+)$', re.IGNORECASE)
+        r"^https?://"  # http:// or https://
+        r"(?:(?:[A-Z0-9](?:[A-Z0-9-]{0,61}[A-Z0-9])?\.)+[A-Z]{2,6}\.?|"  # domain...
+        r"localhost|"  # localhost...
+        r"\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3})"  # ...or ip
+        r"(?::\d+)?"  # optional port
+        r"(?:/?|[/?]\S+)$",
+        re.IGNORECASE,
+    )
     return url_pattern.match(url) is not None
 
 
-def truncate_string(text: str, max_length: int = 50, suffix: str = '...') -> str:
+def truncate_string(text: str, max_length: int = 50, suffix: str = "...") -> str:
     """
     Truncate string to maximum length.
 
@@ -218,4 +228,4 @@ def truncate_string(text: str, max_length: int = 50, suffix: str = '...') -> str
     """
     if len(text) <= max_length:
         return text
-    return text[:max_length - len(suffix)] + suffix
+    return text[: max_length - len(suffix)] + suffix

@@ -3,9 +3,10 @@ Basic tests for Miniflux Exporter.
 """
 
 import pytest
+
 from miniflux_exporter import __version__
 from miniflux_exporter.config import Config
-from miniflux_exporter.utils import sanitize_filename, format_bytes
+from miniflux_exporter.utils import format_bytes, sanitize_filename
 
 
 def test_version():

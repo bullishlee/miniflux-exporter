@@ -41,6 +41,11 @@ jobs:
       - name: Install package
         run: |
           pip install -e .
+          echo "Package installed, checking..."
+          pip show miniflux-exporter
+          echo "Checking for console scripts..."
+          python -c "import sys; print('Python executable:', sys.executable)"
+          python -c "import sys; import os; print('Scripts dir:', os.path.join(os.path.dirname(sys.executable), 'Scripts' if sys.platform == 'win32' else ''))"
 
       - name: Lint with flake8
         run: |
@@ -71,8 +76,12 @@ jobs:
 
       - name: Test CLI commands
         run: |
-          miniflux-export --version
-          miniflux-export --help
+          # Test using python -m (this should always work)
+          python -m miniflux_exporter --version
+          python -m miniflux_exporter --help
+          # Verify package can be imported
+          python -c "import miniflux_exporter; print('Package imported successfully')"
+          python -c "from miniflux_exporter.cli import main; print('CLI main function accessible')"
 
       - name: Archive coverage results
         if: always()

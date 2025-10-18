@@ -57,7 +57,7 @@ def test_sanitize_filename():
     assert sanitize_filename('hello*world') == 'hello_world'
     assert sanitize_filename('hello?world') == 'hello_world'
     assert sanitize_filename('hello"world') == 'hello_world'
-    assert sanitize_filename('hello<world>') == 'hello_world_'
+    assert sanitize_filename('hello<world>') == 'hello_world'
     assert sanitize_filename('hello|world') == 'hello_world'
 
     # Test multiple underscores

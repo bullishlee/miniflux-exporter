@@ -38,6 +38,12 @@ miniflux-export --setup
 miniflux-export --url https://miniflux.example.com \
                 --api-key YOUR_API_KEY \
                 --output ./articles
+
+# 备选方案：以 Python 模块方式运行（如果命令在 PATH 中找不到）
+python -m miniflux_exporter --setup
+python -m miniflux_exporter --url https://miniflux.example.com \
+                            --api-key YOUR_API_KEY \
+                            --output ./articles
 ```
 
 ### 使用配置文件

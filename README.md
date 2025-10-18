@@ -38,6 +38,12 @@ miniflux-export --setup
 miniflux-export --url https://miniflux.example.com \
                 --api-key YOUR_API_KEY \
                 --output ./articles
+
+# Alternative: Run as Python module (if command not found in PATH)
+python -m miniflux_exporter --setup
+python -m miniflux_exporter --url https://miniflux.example.com \
+                            --api-key YOUR_API_KEY \
+                            --output ./articles
 ```
 
 ### Using Configuration File

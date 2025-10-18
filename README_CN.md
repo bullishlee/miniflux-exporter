@@ -1,7 +1,7 @@
 # Miniflux Exporter
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![Python Version](https://img.shields.io/badge/python-3.6%2B-blue)](https://www.python.org/downloads/)
+[![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
 [![PyPI version](https://badge.fury.io/py/miniflux-exporter.svg)](https://badge.fury.io/py/miniflux-exporter)
 
 将您的 [Miniflux](https://miniflux.app/) 文章导出为 Markdown 格式，完整保留元数据。
@@ -240,7 +240,7 @@ Markdown 格式的文章内容...
 docker run -v $(pwd)/articles:/output \
            -e MINIFLUX_URL=https://miniflux.example.com \
            -e MINIFLUX_API_KEY=your_api_key \
-           miniflux-exporter/miniflux-exporter
+           fisherpensieve/miniflux-exporter
 ```
 
 ### 使用 Docker Compose
@@ -252,7 +252,7 @@ version: '3.8'
 
 services:
   miniflux-exporter:
-    image: miniflux-exporter/miniflux-exporter
+    image: fisherpensieve/miniflux-exporter
     volumes:
       - ./articles:/output
     environment:
@@ -271,7 +271,7 @@ docker-compose up
 
 ```bash
 cd docker
-docker build -t miniflux-exporter .
+docker build -t fisherpensieve/miniflux-exporter .
 ```
 
 ## 💡 使用场景

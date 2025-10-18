@@ -76,6 +76,8 @@ jobs:
 
       - name: Test CLI commands
         run: |
+          # Explicitly install PyYAML for debugging ModuleNotFoundError
+          pip install PyYAML
           # Test using python -m (this should always work)
           python -m miniflux_exporter --version
           python -m miniflux_exporter --help

@@ -4,11 +4,12 @@
 Configuration management for Miniflux Exporter.
 """
 
-import os
 import json
-import yaml
+import os
 from pathlib import Path
-from typing import Optional, Dict, Any
+from typing import Any, Dict, Optional
+
+import yaml
 
 
 class Config:

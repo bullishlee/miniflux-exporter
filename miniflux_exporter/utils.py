@@ -6,7 +6,7 @@ Utility functions for Miniflux Exporter.
 
 import re
 from pathlib import Path
-from typing import Dict, Any
+from typing import Any, Dict
 
 
 def sanitize_filename(filename: str, max_length: int = 200) -> str:

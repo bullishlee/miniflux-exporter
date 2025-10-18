@@ -12,7 +12,7 @@ __version__ = "1.0.0"
 __author__ = "Miniflux Exporter Contributors"
 __license__ = "MIT"
 
-from .exporter import MinifluxExporter
 from .config import Config
+from .exporter import MinifluxExporter
 
 __all__ = ["MinifluxExporter", "Config", "__version__"]

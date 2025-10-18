@@ -6,9 +6,9 @@ Core exporter module for Miniflux Exporter.
 
 import json
 import logging
-from pathlib import Path
-from typing import Optional, Dict, Any, List
 from datetime import datetime
+from pathlib import Path
+from typing import Any, Dict, List, Optional
 
 try:
     import miniflux
@@ -21,15 +21,8 @@ except ImportError:
     raise ImportError("html2text package is required. Install it with: pip install html2text")
 
 from .config import Config
-from .utils import (
-    sanitize_filename,
-    create_markdown_frontmatter,
-    format_filename,
-    get_save_path,
-    print_progress_bar,
-    format_bytes
-)
-
+from .utils import (create_markdown_frontmatter, format_bytes, format_filename,
+                    get_save_path, print_progress_bar, sanitize_filename)
 
 logger = logging.getLogger(__name__)
 

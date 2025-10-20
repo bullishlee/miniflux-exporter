@@ -2,7 +2,7 @@
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![Python Version](https://img.shields.io/badge/python-3.8%2B-blue)](https://www.python.org/downloads/)
-[![PyPI version](https://badge.fury.io/py/miniflux-exporter.svg)](https://badge.fury.io/py/miniflux-exporter)
+[![PyPI version](https://img.shields.io/pypi/v/miniflux-exporter.svg)](https://pypi.org/project/miniflux-exporter/)
 
 Export your [Miniflux](https://miniflux.app/) articles to Markdown format with full metadata preservation.
 
